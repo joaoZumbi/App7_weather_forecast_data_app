@@ -3,7 +3,7 @@ import plotly.graph_objs as go
 from plotly.subplots import make_subplots
 from backend import get_data
 
-st.title("Weather Forecast for the next days")
+st.title("Weather Forecast for the next days: from Openweathermap API")
 num_cities = st.slider("Number of Cities", min_value=1, max_value=5)
 
 places = []
@@ -37,18 +37,12 @@ else:
                           "Rain": "images/rain.png", "Snow": "images/snow.png"}
                 sky_conditions = [dct["weather"][0]["main"] for dct in filtered_data]
                 image_paths = [images[condition] for condition in sky_conditions]
-                # Add an image trace to the corresponding subplot
-                fig.add_layout_image(
-                    dict(source=image_paths, xref="x", yref="y",
-                         x=dates[0], y=temperatures[0],
-                         sizex=dates[-1] - dates[0], sizey=max(temperatures) - min(temperatures),
-                         sizing="stretch")
-                )
-                fig.update_xaxes(range=[dates[0], dates[-1]], row=1, col=i)
-                fig.update_yaxes(range=[min(temperatures), max(temperatures)], row=1, col=i)
+                print(sky_conditions)
+                st.image(image_paths, width=115)
 
         except KeyError:
             st.write(f"No weather data available for {place}.")
 
-    fig.update_layout(height=600, showlegend=False)
-    st.plotly_chart(fig)
+    if option == "Temperature":
+        fig.update_layout(height=600, showlegend=False)
+        st.plotly_chart(fig)
